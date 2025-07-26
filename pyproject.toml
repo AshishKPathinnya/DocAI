@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "doc-ai"
+version = "1.0.0"
+requires-python = ">=3.11"
+dependencies = [
+    "streamlit>=1.47.1",
+    "google-generativeai>=0.8.5",
+    "pypdf2>=3.0.1",
+    "numpy>=2.3.2",
+    "scikit-learn>=1.7.1",
+]
+
+[tool.setuptools]
+packages = []
+py-modules = []
+
+[tool.poetry]
+package-mode = false
