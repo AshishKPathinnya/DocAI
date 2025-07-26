@@ -1,20 +1,18 @@
-# Doc AI - RAG Q&A Chatbot
+# Doc AI - Advanced RAG Q&A Chatbot
 
-## Overview
+An advanced Retrieval-Augmented Generation (RAG) chatbot powered by Google Gemini AI that allows users to upload PDF documents and ask questions about their content. The system processes PDFs, creates searchable indexes, and uses Google's latest AI models to generate contextual responses.
 
-Doc AI is a Retrieval-Augmented Generation (RAG) chatbot built with Streamlit that allows users to upload PDF documents and ask questions about their content. The system processes PDFs, creates embeddings for semantic search, and uses a language model to generate contextual responses based on the retrieved document content.
+## Features
 
-## System Architecture
-
-The application follows a modular architecture with four main components:
-
-1. **Frontend**: Streamlit web interface for user interaction
-2. **Document Processing**: PDF text extraction and chunking
-3. **Embedding System**: Vector embeddings and similarity search using FAISS
-4. **Chat Engine**: Text generation using Hugging Face transformers
-
-The system uses a RAG (Retrieval-Augmented Generation) pattern where user queries are first used to retrieve relevant document chunks, which are then provided as context to a language model for response generation.
-
+- **Advanced RAG System**: Retrieval-Augmented Generation for accurate document-based Q&A
+- **Google Gemini Integration**: Powered by Google's Gemini-1.5-Flash model with intelligent fallback
+- **Enhanced PDF Processing**: Multi-method text extraction with improved accuracy
+- **Smart Search Engine**: TF-IDF based similarity search with proximity scoring
+- **Professional Dashboard**: Clean, responsive interface with real-time statistics
+- **Multi-Document Support**: Process and query multiple documents simultaneously
+- **Dual AI Modes**: Toggle between Google Gemini and local response generation
+- **Real-time Analytics**: Live monitoring of AI engine status and performance metrics
+  
 ## Screenshots and Live Link : https://bv2x42nzhokwdyz4zstjkq.streamlit.app/
 <img width="1920" height="1080" alt="Screenshot 2025-07-27 001526" src="https://github.com/user-attachments/assets/56bb0f38-baa0-437d-9642-cff55c28541d" />
 
@@ -24,99 +22,10 @@ The system uses a RAG (Retrieval-Augmented Generation) pattern where user querie
 
 <img width="1920" height="1080" alt="Screenshot 2025-07-27 001713" src="https://github.com/user-attachments/assets/358d7583-a349-4704-903a-56ab2a39aa7b" />
 
-## Key Components
-
-### PDF Processing (`utils/pdf_processor.py`)
-- **Purpose**: Extracts and processes text from uploaded PDF files
-- **Technology**: PyPDF2 for PDF text extraction
-- **Features**: 
-  - Text cleaning and normalization
-  - Chunking with configurable size (500 chars) and overlap (50 chars)
-  - Handles multi-page documents
-
-### Embedding Management (`utils/embeddings.py`)
-- **Purpose**: Creates and manages document embeddings for semantic search
-- **Technology**: 
-  - SentenceTransformers (all-MiniLM-L6-v2 model)
-  - FAISS for vector similarity search
-- **Features**:
-  - 384-dimensional embeddings
-  - Cosine similarity search
-  - Cached model loading for performance
-
-### Chat Engine (`utils/gemini_engine.py`)
-- **Purpose**: Generates responses using language models
-- **Technology**: 
-  - Hugging Face Transformers
-  - Google Gemini API-medium as default model
-- **Features**:
-  - CPU/GPU adaptive execution
-  - Configurable generation parameters (temperature: 0.7, top_p: 0.9)
-  - Maximum length limits for responses
-
-### Main Application (`app.py`)
-- **Purpose**: Streamlit frontend orchestrating all components
-- **Features**:
-  - File upload interface
-  - Chat history management
-  - Session state management
-  - Component initialization and coordination
-
-## Data Flow
-
-1. **Document Upload**: Users upload PDF files through Streamlit interface
-2. **Text Extraction**: PDFProcessor extracts and cleans text from PDFs
-3. **Chunking**: Text is split into manageable chunks with overlap
-4. **Embedding Creation**: SentenceTransformer creates vector embeddings for chunks
-5. **Vector Storage**: FAISS index stores embeddings for fast similarity search
-6. **Query Processing**: User questions are embedded and matched against document chunks
-7. **Context Retrieval**: Most relevant chunks are retrieved based on similarity
-8. **Response Generation**: ChatEngine generates responses using retrieved context
-
-## External Dependencies
-
-### Core ML Libraries
-- **sentence-transformers**: For creating document embeddings
-- **transformers**: For language model inference
-- **torch**: PyTorch backend for model execution
-- **faiss-cpu**: For efficient vector similarity search
-
-### Document Processing
-- **PyPDF2**: For PDF text extraction
-
-### Web Framework
-- **streamlit**: For web interface and user interaction
-
-### Utilities
-- **numpy**: For numerical operations on embeddings
-
-## Deployment Strategy
-
-The application is designed for single-user deployment with the following characteristics:
-
-### Resource Management
-- **Caching**: Uses Streamlit's `@st.cache_resource` for model loading
-- **Session State**: Maintains chat history and processed documents in memory
-- **Temporary Files**: Uses Python's tempfile for handling uploaded PDFs
-
-### Performance Considerations
-- **Model Loading**: One-time model initialization with caching
-- **Memory Management**: In-memory storage for embeddings and documents
-- **CPU/GPU Adaptive**: Automatically detects and uses available hardware
-
-### Scalability Limitations
-- **Single Session**: No persistence across browser sessions
-- **Memory Bound**: Document storage limited by available RAM
-- **No Database**: All data stored in session state
-
 ## Setup for Local Development
 
 1. Clone this repository
 2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   Or manually:
    ```bash
    pip install streamlit google-generativeai PyPDF2 numpy scikit-learn
    ```
@@ -133,8 +42,127 @@ The application is designed for single-user deployment with the following charac
 1. Push this repository to GitHub
 2. Go to [share.streamlit.io](https://share.streamlit.io)
 3. Connect your GitHub account and deploy this repository
-4. In the deployment settings, add your `GOOGLE_API_KEY` as a secret
+4. In the deployment settings, add your `GOOGLE_API_KEY` as a secret:
+   - Click on the "Advanced settings" section during deployment
+   - Under "Secrets", add: `GOOGLE_API_KEY = your_actual_api_key_here`
+   - Make sure to use your actual Google AI Studio API key
 5. The app will automatically use the default Streamlit port (8501) for cloud deployment
 
-**Note**: The `.streamlit/config.toml` file is configured for both local development (with port 5000) and cloud deployment (default port). Streamlit Cloud will automatically override local port settings.
+## Architecture
 
+The application follows a modular RAG architecture with four main components:
+
+### Key Components
+
+**PDF Processing (`utils/pdf_processor.py`)**
+- Purpose: Extracts and processes text from uploaded PDF files
+- Technology: PyPDF2 with enhanced multi-method extraction
+- Features:
+  - Advanced text cleaning and normalization
+  - Paragraph-aware chunking (600 chars, 100 chars overlap)
+  - Multi-page document handling with page context
+  - Fallback extraction methods for complex PDFs
+
+**Search Engine (`utils/simple_search.py`)**
+- Purpose: Provides intelligent document retrieval
+- Technology: Enhanced TF-IDF with proximity scoring
+- Features:
+  - Advanced tokenization with phrase matching
+  - Question-answer pattern recognition
+  - Multi-factor relevance scoring
+  - Context-aware document ranking
+
+**AI Engine (`utils/gemini_engine.py`)**
+- Purpose: Generates intelligent responses using Google's latest AI
+- Technology: Google Gemini-1.5-Flash API
+- Features:
+  - Context-aware response generation
+  - Configurable response length and style
+  - Error handling with graceful degradation
+  - Secure API key management
+
+**Local Fallback (`utils/simple_generator.py`)**
+- Purpose: Provides responses when Gemini is unavailable
+- Technology: Template-based response generation with advanced analysis
+- Features:
+  - Question classification and analysis
+  - Context-aware response building
+  - Multi-document synthesis
+  - Intelligent content categorization
+
+**Main Application (`app.py`)**
+- Purpose: Streamlit frontend orchestrating all components
+- Features:
+  - Professional dashboard interface
+  - Real-time system monitoring
+  - Chat history management
+  - Component coordination and state management
+
+## Data Flow
+
+1. **Document Upload**: Users upload PDF files through Streamlit interface
+2. **Text Extraction**: Enhanced PDFProcessor extracts and cleans text from PDFs
+3. **Intelligent Chunking**: Text is split into contextual chunks with smart overlap
+4. **TF-IDF Indexing**: Search engine creates searchable indexes with relevance scoring
+5. **Query Processing**: User questions are analyzed and matched against document content
+6. **Context Retrieval**: Most relevant chunks are retrieved using advanced scoring
+7. **AI Response Generation**: Gemini AI generates contextual responses with retrieved content
+8. **Fallback Handling**: Local generator provides responses if Gemini is unavailable
+
+## Dependencies
+
+### Core Libraries
+- **streamlit**: Modern web interface framework
+- **google-generativeai**: Google Gemini AI integration
+- **PyPDF2**: PDF document processing and text extraction
+- **numpy**: Numerical computations for similarity calculations
+- **scikit-learn**: Machine learning utilities for text processing
+
+### System Requirements
+- Python 3.11+
+- Internet connection for Gemini API access
+- Minimum 512MB RAM for document processing
+
+## Performance Characteristics
+
+### Resource Management
+- **Caching**: Uses Streamlit's `@st.cache_resource` for model loading
+- **Session State**: Maintains chat history and processed documents in memory
+- **Temporary Files**: Secure handling of uploaded PDFs with automatic cleanup
+
+### Scalability Considerations
+- **Single Session**: Optimized for individual user sessions
+- **Memory Efficient**: Smart chunking prevents memory overflow
+- **API Rate Limiting**: Graceful handling of Gemini API limits
+
+## Security Features
+
+- **Secure API Key Management**: Environment-based key storage
+- **File Validation**: PDF format verification before processing
+- **Session Isolation**: User data isolated per browser session
+- **Temporary File Cleanup**: Automatic removal of uploaded files
+
+## Troubleshooting
+
+### Common Issues
+1. **API Key Error**: Ensure `GOOGLE_API_KEY` is set correctly
+2. **PDF Processing Error**: Check if PDF is text-based (not scanned images)
+3. **Slow Response**: Large documents may take time to process initially
+4. **Memory Issues**: Restart session if processing many large documents
+
+### Performance Tips
+- Upload text-based PDFs for best results
+- Process documents in smaller batches for better performance
+- Use Local mode if experiencing API rate limits
+- Clear chat history periodically to free memory
+
+## Usage
+
+1. Upload PDF documents using the file uploader
+2. Click "Process Documents" to analyze your files
+3. Ask questions about your documents in the chat interface
+4. Toggle between Gemini AI mode and Local mode as needed
+5. Monitor system performance through the real-time dashboard
+---
+
+**Note**: This application is designed for development and small-scale usage. For production deployment with multiple users, consider adding persistent storage, user authentication, and horizontal scaling capabilities.
